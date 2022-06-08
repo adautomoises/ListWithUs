@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import {Text, View, FlatList} from "react-native";
 import styles from "../assets/css/css";
 
-export default function() {
+export default function(props) {
   return (
-    <View>
-      <FlatList style={styles.flatList}>
-        <Text>a a a a</Text>
-      </FlatList>
+    <View style={styles.list}>
+    <Text style={styles.text}>{props.nomedalista}</Text>
     </View>
   )
 }

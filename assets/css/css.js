@@ -1,11 +1,18 @@
 import {StyleSheet} from "react-native";
 
 const styles = StyleSheet.create({
-  container: {
+  containerBackground: {
+    flex: 1,
+    backgroundColor: "#8ECAE6",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  containerList: {
     flex: 1,
     backgroundColor: "#8ECAE6",
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 100
   },
   footer: {
     width: '100%',
@@ -14,7 +21,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     bottom: 0,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    elevation: 10
   },
   button: {
     padding: 20,
@@ -31,11 +39,14 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20
   },
-  flatList:{
-    flex: 1,
-    width: 10,
-    height: 10,
-    backgroundColor: "#fff"
+  list:{
+    width: 320,
+    height: 120,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    elevation: 5
   }
 });
 
