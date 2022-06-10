@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useState } from "react";
 import List from "./components/list";
 import styles from "./assets/css/css";
-import {
+import {SafeAreaView,
   ScrollView,
   View,
   Text,
@@ -14,20 +14,20 @@ import {
 } from "react-native";
 
 function HomeScreen({ navigation }) {
-  const [listas, setListas] = useState();
-  const [itemListas, setItemListas] = useState([]);
-  const addList = () => {
-    setItemListas([...itemListas, { nome: "Lista de Compras"}]);
-    setListas(null);
-  };
-  const deleteList = (index) => {
-    let listCopy = [...itemListas];
-    listCopy.splice(index, 1);
-    setItemListas(listCopy);
-  }
+const [listas, setListas] = useState();
+const [itemListas, setItemListas] = useState([]);
+const addList = () => {
+  setItemListas([...itemListas, { nome: "Lista de Compras !!!"}]);
+  setListas(null);
+};
+const deleteList = (index) => {
+  let listCopy = [...itemListas];
+  listCopy.splice(index, 1);
+  setItemListas(listCopy);
+}
   return(
-  <>
-    <View style={{flex:1, backgroundColor:"#8ECAE6"}}>
+  <SafeAreaView style={{flex:1, paddingTop: 50, backgroundColor:"#8ECAE6"}}>
+    <View>
       <ScrollView>
         {!itemListas.length ? (
           <View style={styles.containerBackground}>
@@ -45,7 +45,7 @@ function HomeScreen({ navigation }) {
                 // <TouchableOpacity key={index} onPress={() => deleteList()}>
                 //   <List nomedalista = {lista.nome}/>
                 // </TouchableOpacity>
-                <TouchableOpacity key={index} onPress={() => navigation.navigate('Lista')}>
+                <TouchableOpacity key={index} onPress={() => navigation.navigate('Lista', {lista, index})}>
                   <List nomedalista = {lista.nome}/>
                 </TouchableOpacity>
               )
@@ -68,14 +68,15 @@ function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-    </>
+    </SafeAreaView>
     )
 }
 
-function Lista() {
+function Lista({route}) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Ok.</Text>
+      <Text>Ok. nome da lista é: {route.params?.lista.nome}</Text>
+      <Text>Ok. index da lista é: {route.params?.index}</Text>
     </View>
   );
 }
@@ -84,8 +85,11 @@ const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
+    <Stack.Navigator initialRouteName='Home'>
+      <Stack.Screen name="Home" component={HomeScreen} 
+      options={{
+        headerShown: false
+      }}/>
       <Stack.Screen name="Lista" component={Lista} />
     </Stack.Navigator>
   );
