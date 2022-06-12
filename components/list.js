@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Text, View, FlatList} from "react-native";
+import {Text, View} from "react-native";
 import styles from "../assets/css/css";
 
 export default function(props) {

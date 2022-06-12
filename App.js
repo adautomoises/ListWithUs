@@ -3,21 +3,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useState } from "react";
 import List from "./components/list";
 import styles from "./assets/css/css";
-import {SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-  Button,
-  Image,
-  ImageBackground,
-} from "react-native";
+import {SafeAreaView, ScrollView, View, Text, TextInput, Pressable, TouchableOpacity, Button, Image, ImageBackground} from "react-native";
 
-function HomeScreen({ navigation }) {
+function HomeScreen({route , navigation}) {
 const [listas, setListas] = useState();
 const [itemListas, setItemListas] = useState([]);
 const addList = () => {
-  setItemListas([...itemListas, { nome: "Lista de Compras !!!"}]);
+  setItemListas([...itemListas, { nome: `${route.params?.text}`}]);
   setListas(null);
 };
 const deleteList = (index) => {
@@ -26,8 +18,8 @@ const deleteList = (index) => {
   setItemListas(listCopy);
 }
   return(
-  <SafeAreaView style={{flex:1, paddingTop: 50, backgroundColor:"#8ECAE6"}}>
-    <View>
+  <SafeAreaView style={{flex:1}}>
+    <View style={{flex:1, paddingTop: 50, backgroundColor:"#8ECAE6"}}>
       <ScrollView>
         {!itemListas.length ? (
           <View style={styles.containerBackground}>
@@ -42,12 +34,9 @@ const deleteList = (index) => {
           <View style={styles.containerList}>
             {itemListas.map((lista, index) => {
               return (
-                // <TouchableOpacity key={index} onPress={() => deleteList()}>
-                //   <List nomedalista = {lista.nome}/>
-                // </TouchableOpacity>
-                <TouchableOpacity key={index} onPress={() => navigation.navigate('Lista', {lista, index})}>
+                <Pressable key={index} onPress={() => navigation.navigate('ViewList', {lista, index, deleteList})}>
                   <List nomedalista = {lista.nome}/>
-                </TouchableOpacity>
+                </Pressable>
               )
             }
               )}
@@ -55,31 +44,62 @@ const deleteList = (index) => {
         )}
         </ScrollView>
         <View style={styles.footer}>
-          <TouchableOpacity
+          <Pressable
             style={styles.button}
             onPress={() => {
-              addList();
+              navigation.navigate('CreateList', {addList})
             }}
             >
             <Image
               style={styles.imageFooter}
               source={require("./assets/plus-circle.png")}
               />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>
     )
 }
 
-function Lista({route}) {
+function ViewList({route , navigation}) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Ok. nome da lista é: {route.params?.lista.nome}</Text>
       <Text>Ok. index da lista é: {route.params?.index}</Text>
+      <Button title="DELETE" onPress={() => {
+        route.params?.deleteList(route.params?.index);
+        navigation.navigate('Home')}}/>
     </View>
   );
 }
+function CreateList({route , navigation}){
+    const [text, onChangeText] = useState(null);
+    const [number, onChangeNumber] = useState(null);
+  
+    return (
+      <SafeAreaView style={{ flex: 1}}>
+        <TextInput
+          style={styles.inputCreate}
+          onChangeText={onChangeText}
+          value={text}
+          placeholder="Nome da Lista"
+        />
+        <TextInput
+          style={styles.inputCreate}
+          onChangeText={onChangeNumber}
+          value={number}
+          placeholder="Teclado Numérico"
+          keyboardType="numeric"
+        />
+        <View>
+          <Button title="CREATE" onPress={() => {
+            route.params?.addList();
+            navigation.navigate('Home', {text})}}/>
+        </View>
+      </SafeAreaView>
+    );
+  };
+
 
 const Stack = createStackNavigator();
 
@@ -90,7 +110,8 @@ function MyStack() {
       options={{
         headerShown: false
       }}/>
-      <Stack.Screen name="Lista" component={Lista} />
+      <Stack.Screen name="ViewList" component={ViewList} />
+      <Stack.Screen name="CreateList" component={CreateList} />
     </Stack.Navigator>
   );
 }
