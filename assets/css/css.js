@@ -24,12 +24,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     elevation: 10
   },
-  button: {
-    padding: 20,
-  },
   imageFooter: {
     width: 63,
-    height: 63
+    height: 63,
   },
   ImageBackground: {
     width: 200,

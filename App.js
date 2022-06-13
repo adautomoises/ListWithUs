@@ -1,3 +1,17 @@
+import { AntDesign,
+  Entypo,
+  EvilIcons,
+  Feather,
+  FontAwesome,
+  FontAwesome5,
+  Fontisto,
+  Foundation,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Octicons,
+  SimpleLineIcons,
+  Zocial } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useState } from "react";
@@ -8,8 +22,8 @@ import {SafeAreaView, ScrollView, View, Text, TextInput, Pressable, TouchableOpa
 function HomeScreen({route , navigation}) {
 const [listas, setListas] = useState();
 const [itemListas, setItemListas] = useState([]);
-const addList = () => {
-  setItemListas([...itemListas, { nome: `${route.params?.text}`}]);
+const addList = (text) => {
+  setItemListas((oldItemListas)=>[...oldItemListas, { name: text}]);
   setListas(null);
 };
 const deleteList = (index) => {
@@ -35,7 +49,7 @@ const deleteList = (index) => {
             {itemListas.map((lista, index) => {
               return (
                 <Pressable key={index} onPress={() => navigation.navigate('ViewList', {lista, index, deleteList})}>
-                  <List nomedalista = {lista.nome}/>
+                  <List nomedalista = {lista.name}/>
                 </Pressable>
               )
             }
@@ -45,15 +59,10 @@ const deleteList = (index) => {
         </ScrollView>
         <View style={styles.footer}>
           <Pressable
-            style={styles.button}
             onPress={() => {
               navigation.navigate('CreateList', {addList})
-            }}
-            >
-            <Image
-              style={styles.imageFooter}
-              source={require("./assets/plus-circle.png")}
-              />
+            }}>
+            <AntDesign name="pluscircle" size={48} color="#219EBC" />
           </Pressable>
         </View>
       </View>
@@ -64,17 +73,26 @@ const deleteList = (index) => {
 function ViewList({route , navigation}) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Ok. nome da lista é: {route.params?.lista.nome}</Text>
+      <Text>Ok. nome da lista é: {route.params?.lista.name}</Text>
       <Text>Ok. index da lista é: {route.params?.index}</Text>
-      <Button title="DELETE" onPress={() => {
-        route.params?.deleteList(route.params?.index);
-        navigation.navigate('Home')}}/>
+
+      <Pressable title="DELETE" onPress={() => {
+          route.params?.deleteList(route.params?.index);
+          navigation.navigate('Home')}}>
+        <MaterialCommunityIcons name="trash-can-outline" size={30} color="black" />
+      </Pressable>
+      <Pressable
+            onPress={() => {
+              navigation.navigate('EditList')
+            }}>
+            <MaterialCommunityIcons name="pencil" size={30} color="black" />
+          </Pressable>
     </View>
   );
 }
 function CreateList({route , navigation}){
-    const [text, onChangeText] = useState(null);
-    const [number, onChangeNumber] = useState(null);
+    const [text, onChangeText] = useState();
+    // const [number, onChangeNumber] = useState(null);
   
     return (
       <SafeAreaView style={{ flex: 1}}>
@@ -84,23 +102,29 @@ function CreateList({route , navigation}){
           value={text}
           placeholder="Nome da Lista"
         />
-        <TextInput
+        {/* <TextInput
           style={styles.inputCreate}
           onChangeText={onChangeNumber}
           value={number}
           placeholder="Teclado Numérico"
           keyboardType="numeric"
-        />
+        /> */}
         <View>
           <Button title="CREATE" onPress={() => {
-            route.params?.addList();
-            navigation.navigate('Home', {text})}}/>
+            route.params?.addList(text);
+            navigation.navigate('Home', text)}}
+            />
         </View>
       </SafeAreaView>
     );
   };
+function EditList({navigation}){
+  return (
+    <View>
 
-
+    </View>
+  );
+}
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -110,8 +134,12 @@ function MyStack() {
       options={{
         headerShown: false
       }}/>
-      <Stack.Screen name="ViewList" component={ViewList} />
+      <Stack.Screen name="ViewList" component={ViewList}
+      options={({ route }) => ({ 
+        title: route.params.lista.name,
+      })}/>
       <Stack.Screen name="CreateList" component={CreateList} />
+      <Stack.Screen name="EditList" component={EditList} />
     </Stack.Navigator>
   );
 }
